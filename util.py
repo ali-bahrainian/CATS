@@ -16,7 +16,7 @@
 
 """This file contains some utility functions"""
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import time
 import os
 FLAGS = tf.app.flags.FLAGS

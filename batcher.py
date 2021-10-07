@@ -16,13 +16,13 @@
 
 """This file contains code to process data into batches"""
 
-import Queue
+import queue
 from random import shuffle
 from threading import Thread
 import time
 import numpy as np
-import tensorflow as tf
-import data
+import tensorflow.compat.v1 as tf
+from . import data
 
 
 class Example(object):
@@ -199,7 +199,7 @@ class Batch(object):
       self.enc_topicwords_batch[i, :] = ex.article_topic_vector[:]
       self.enc_topicwords_probs_batch[i, :] = ex.article_topic_word_probs[:]
       self.enc_lens[i] = ex.enc_len
-      for j in xrange(ex.enc_len):
+      for j in range(ex.enc_len):
         self.enc_padding_mask[i][j] = 1
 
     # For pointer-generator mode, need to store some extra info
@@ -236,7 +236,7 @@ class Batch(object):
     for i, ex in enumerate(example_list):
       self.dec_batch[i, :] = ex.dec_input[:]
       self.target_batch[i, :] = ex.target[:]
-      for j in xrange(ex.dec_len):
+      for j in range(ex.dec_len):
         self.dec_padding_mask[i][j] = 1
 
   def store_orig_strings(self, example_list):
@@ -266,8 +266,8 @@ class Batcher(object):
     self._single_pass = single_pass
 
     # Initialize a queue of Batches waiting to be used, and a queue of Examples waiting to be batched
-    self._batch_queue = Queue.Queue(self.BATCH_QUEUE_MAX)
-    self._example_queue = Queue.Queue(self.BATCH_QUEUE_MAX * self._hps.batch_size)
+    self._batch_queue = queue.Queue(self.BATCH_QUEUE_MAX)
+    self._example_queue = queue.Queue(self.BATCH_QUEUE_MAX * self._hps.batch_size)
 
     # Different settings depending on whether we're in single_pass mode or not
     if single_pass:
@@ -282,12 +282,12 @@ class Batcher(object):
 
     # Start the threads that load the queues
     self._example_q_threads = []
-    for _ in xrange(self._num_example_q_threads):
+    for _ in range(self._num_example_q_threads):
       self._example_q_threads.append(Thread(target=self.fill_example_queue))
       self._example_q_threads[-1].daemon = True
       self._example_q_threads[-1].start()
     self._batch_q_threads = []
-    for _ in xrange(self._num_batch_q_threads):
+    for _ in range(self._num_batch_q_threads):
       self._batch_q_threads.append(Thread(target=self.fill_batch_queue))
       self._batch_q_threads[-1].daemon = True
       self._batch_q_threads[-1].start()
@@ -324,7 +324,7 @@ class Batcher(object):
 
     while True:
       try:
-        (article, abstract) = input_gen.next() # read the next example from file. article and abstract are both strings.
+        (article, abstract) = next(input_gen) # read the next example from file. article and abstract are both strings.
       except StopIteration: # if there are no more examples:
         tf.logging.info("The example generator for this example queue filling thread has exhausted data.")
         if self._single_pass:
@@ -348,13 +348,13 @@ class Batcher(object):
       if self._hps.mode != 'decode':
         # Get bucketing_cache_size-many batches of Examples into a list, then sort
         inputs = []
-        for _ in xrange(self._hps.batch_size * self._bucketing_cache_size):
+        for _ in range(self._hps.batch_size * self._bucketing_cache_size):
           inputs.append(self._example_queue.get())
         inputs = sorted(inputs, key=lambda inp: inp.enc_len) # sort by length of encoder sequence
 
         # Group the sorted Examples into batches, optionally shuffle the batches, and place in the batch queue.
         batches = []
-        for i in xrange(0, len(inputs), self._hps.batch_size):
+        for i in range(0, len(inputs), self._hps.batch_size):
           batches.append(inputs[i:i + self._hps.batch_size])
         if not self._single_pass:
           shuffle(batches)
@@ -363,7 +363,7 @@ class Batcher(object):
 
       else: # beam search decode mode
         ex = self._example_queue.get()
-        b = [ex for _ in xrange(self._hps.batch_size)]
+        b = [ex for _ in range(self._hps.batch_size)]
         self._batch_queue.put(Batch(b, self._hps, self._vocab))
 
 
@@ -393,7 +393,7 @@ class Batcher(object):
     Args:
       example_generator: a generator of tf.Examples from file. See data.example_generator"""
     while True:
-      e = example_generator.next() # e is a tf.Example
+      e = next(example_generator) # e is a tf.Example
       try:
         article_text = e.features.feature['article'].bytes_list.value[0] # the article text was saved under the key 'article' in the data files
         abstract_text = e.features.feature['abstract'].bytes_list.value[0] # the abstract text was saved under the key 'abstract' in the data files

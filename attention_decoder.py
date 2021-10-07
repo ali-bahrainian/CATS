@@ -16,7 +16,7 @@
 
 """This file defines the decoder"""
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from tensorflow.python.ops import variable_scope
 from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import nn_ops
@@ -53,8 +53,8 @@ def attention_decoder(decoder_inputs, initial_state, encoder_states, enc_topicwo
     attn_size = encoder_states.get_shape()[2].value # if this line fails, it's because the attention length isn't defined
     
     #tf.Print(attn_dist, [attn_dist])
-    print "-------------------------"
-    print "-------------------------"
+    print("-------------------------")
+    print("-------------------------")
   
     # Reshape encoder_states (need to insert a dim)
     encoder_states = tf.expand_dims(encoder_states, axis=2) # now is shape (batch_size, attn_len, 1, attn_size)
