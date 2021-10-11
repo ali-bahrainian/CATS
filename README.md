@@ -14,13 +14,13 @@ In order to obtain the dataset, we encourage users to download and preprocess th
 
 #### Using Topic Information:
 
-The LDA models used in our paper can be obtained from [here](https://drive.google.com/drive/folders/1M86uAM21Zx8Xn-W4TTi74t7nWCQr1f9v?usp=sharing). The current code release has been tested with the 150 topics pre-trained LDA model. You can make a reference to one of the provided LDA topic models in data.py in the TopicModel class. 
+The LDA models used in our paper can be obtained from [here](https://drive.google.com/drive/folders/1M86uAM21Zx8Xn-W4TTi74t7nWCQr1f9v?usp=sharing). The current code release has been tested with the 150 topics pre-trained LDA model. You can make a reference to one of the provided LDA topic models in data.py in the TopicModel class. By default, the LDA model is expected to be in a folder called `lda`, which contains `lda.model` and `dictionary.dic` available from the beforementioned URL.
 
 #### Train 
 In order to train the model you may run:
 
 ```
-pipenv run python3 run_summarization.py --mode=train --data_path='/data/chunked/train_*' --vocab_path='/data/vocab' --log_root='/logs' --exp_name=myexperiment
+pipenv run python3 run_summarization.py --mode=train --data_path='data/chunked/train_*' --vocab_path='data/vocab' --log_root='logs' --exp_name=myexperiment
 ```
 
 This will create a subdirectory of your specified log_root called myexperiment where all checkpoints will be saved. Then the model will start training using the train_*.bin files as training data.
