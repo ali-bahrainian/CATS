@@ -20,7 +20,7 @@ The LDA models used in our paper can be obtained from [here](https://drive.googl
 In order to train the model you may run:
 
 ```
-python run_summarization.py --mode=train --data_path=/path/to/chunked/train_* --vocab_path=/path/to/vocab --log_root=/path/to/a/log/directory --exp_name=myexperiment
+pipenv run python3 run_summarization.py --mode=train --data_path='/data/chunked/train_*' --vocab_path='/data/vocab' --log_root='/logs' --exp_name=myexperiment
 ```
 
 This will create a subdirectory of your specified log_root called myexperiment where all checkpoints will be saved. Then the model will start training using the train_*.bin files as training data.
