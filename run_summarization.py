@@ -22,11 +22,11 @@ import os
 import tensorflow.compat.v1 as tf
 import numpy as np
 from collections import namedtuple
-from .data import Vocab
-from .batcher import Batcher
-from .model import SummarizationModel
-from .decode import BeamSearchDecoder
-from . import util
+from data import Vocab
+from batcher import Batcher
+from model import SummarizationModel
+from decode import BeamSearchDecoder
+import util
 from tensorflow.python import debug as tf_debug
 
 FLAGS = tf.app.flags.FLAGS

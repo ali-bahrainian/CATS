@@ -19,11 +19,11 @@
 import os
 import time
 import tensorflow.compat.v1 as tf
-from . import beam_search
-from . import data
+import beam_search
+import data
 import json
 import pyrouge
-from . import util
+import util
 import logging
 import numpy as np
 

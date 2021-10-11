@@ -22,7 +22,7 @@ from threading import Thread
 import time
 import numpy as np
 import tensorflow.compat.v1 as tf
-from . import data
+import data
 
 
 class Example(object):
