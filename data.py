@@ -121,7 +121,7 @@ class TopicModel (object):
         self.topics_dictionary = self._createTopicsDict(1000)# A dictionary containing all topics
         
         # LDA needs to be retrained for this version of gensim, omitting errors by manually setting minimum_phi_value
-        self.topicModel.minimum_phi_value = 0.01
+        # self.topicModel.minimum_phi_value = 0.01
     
     def _loadPretrainedTM (self, modelAdd, dictAdd):
         lda = gensim.models.ldamodel.LdaModel.load(modelAdd, mmap = 'r')
