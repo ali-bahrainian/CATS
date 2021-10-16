@@ -16,7 +16,6 @@
 
 """This is the top-level file to train, evaluate or test your summarization model"""
 
-import sys
 import time
 import os
 import tensorflow as tf

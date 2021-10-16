@@ -22,7 +22,7 @@ import struct
 import csv
 from tensorflow.core.example import example_pb2
 import gensim
-from gensim import corpora, similarities, models
+from gensim import corpora
 import re
 
 # <s> and </s> are used in the data files to segment the abstracts into sentences. They don't receive vocab ids.
