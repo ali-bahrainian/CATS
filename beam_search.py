@@ -16,11 +16,11 @@
 
 """This file contains code to run beam search decoding"""
 
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import numpy as np
 import data
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.compat.v1.app.flags.FLAGS
 
 class Hypothesis(object):
   """Class to represent a hypothesis during beam search. Holds all the information needed for the hypothesis."""

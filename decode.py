@@ -18,7 +18,7 @@
 
 import os
 import time
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import beam_search
 import data
 import json
@@ -27,7 +27,7 @@ import util
 import logging
 import numpy as np
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.compat.v1.app.flags.FLAGS
 
 SECS_UNTIL_NEW_CKPT = 60  # max number of seconds before loading new checkpoint
 
@@ -47,8 +47,8 @@ class BeamSearchDecoder(object):
     self._model.build_graph()
     self._batcher = batcher
     self._vocab = vocab
-    self._saver = tf.train.Saver() # we use this to load checkpoints for decoding
-    self._sess = tf.Session(config=util.get_config())
+    self._saver = tf.compat.v1.train.Saver() # we use this to load checkpoints for decoding
+    self._sess = tf.compat.v1.Session(config=util.get_config())
 
     # Load an initial checkpoint to use for decoding
     ckpt_path = util.load_ckpt(self._saver, self._sess)
@@ -82,8 +82,8 @@ class BeamSearchDecoder(object):
       batch = self._batcher.next_batch()  # 1 example repeated across batch
       if batch is None: # finished decoding dataset in single_pass mode
         assert FLAGS.single_pass, "Dataset exhausted, but we are not in single_pass mode"
-        tf.logging.info("Decoder has finished reading dataset for single_pass.")
-        tf.logging.info("Output has been saved in %s and %s. Now starting ROUGE eval...", self._rouge_ref_dir, self._rouge_dec_dir)
+        tf.compat.v1.logging.info("Decoder has finished reading dataset for single_pass.")
+        tf.compat.v1.logging.info("Output has been saved in %s and %s. Now starting ROUGE eval...", self._rouge_ref_dir, self._rouge_dec_dir)
         results_dict = rouge_eval(self._rouge_ref_dir, self._rouge_dec_dir)
         rouge_log(results_dict, self._decode_dir)
         return
@@ -120,7 +120,7 @@ class BeamSearchDecoder(object):
         # Check if SECS_UNTIL_NEW_CKPT has elapsed; if so return so we can load a new checkpoint
         t1 = time.time()
         if t1-t0 > SECS_UNTIL_NEW_CKPT:
-          tf.logging.info('We\'ve been decoding with same checkpoint for %i seconds. Time to load new checkpoint', t1-t0)
+          tf.compat.v1.logging.info('We\'ve been decoding with same checkpoint for %i seconds. Time to load new checkpoint', t1-t0)
           _ = util.load_ckpt(self._saver, self._sess)
           t0 = time.time()
 
@@ -159,7 +159,7 @@ class BeamSearchDecoder(object):
       for idx,sent in enumerate(decoded_sents):
         f.write(sent) if idx==len(decoded_sents)-1 else f.write(sent+"\n")
 
-    tf.logging.info("Wrote example %i to file" % ex_index)
+    tf.compat.v1.logging.info("Wrote example %i to file" % ex_index)
 
 
   def write_for_attnvis(self, article, abstract, decoded_words, attn_dists, p_gens):
@@ -186,15 +186,15 @@ class BeamSearchDecoder(object):
     output_fname = os.path.join(self._decode_dir, 'attn_vis_data.json')
     with open(output_fname, 'w') as output_file:
       json.dump(to_write, output_file)
-    tf.logging.info('Wrote visualization data to %s', output_fname)
+    tf.compat.v1.logging.info('Wrote visualization data to %s', output_fname)
 
 
 def print_results(article, abstract, decoded_output):
   """Prints the article, the reference summmary and the decoded summary to screen"""
   print("")
-  tf.logging.info('ARTICLE:  %s', article)
-  tf.logging.info('REFERENCE SUMMARY: %s', abstract)
-  tf.logging.info('GENERATED SUMMARY: %s', decoded_output)
+  tf.compat.v1.logging.info('ARTICLE:  %s', article)
+  tf.compat.v1.logging.info('REFERENCE SUMMARY: %s', abstract)
+  tf.compat.v1.logging.info('GENERATED SUMMARY: %s', decoded_output)
   print("")
 
 
@@ -234,9 +234,9 @@ def rouge_log(results_dict, dir_to_write):
       val_cb = results_dict[key_cb]
       val_ce = results_dict[key_ce]
       log_str += "%s: %.4f with confidence interval (%.4f, %.4f)\n" % (key, val, val_cb, val_ce)
-  tf.logging.info(log_str) # log to screen
+  tf.compat.v1.logging.info(log_str) # log to screen
   results_file = os.path.join(dir_to_write, "ROUGE_results.txt")
-  tf.logging.info("Writing final ROUGE results to %s...", results_file)
+  tf.compat.v1.logging.info("Writing final ROUGE results to %s...", results_file)
   with open(results_file, "w") as f:
     f.write(log_str)
 

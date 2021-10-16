@@ -3,7 +3,7 @@ Simple script that checks if a checkpoint is corrupted with any inf/NaN values. 
   python inspect_checkpoint.py model.12345
 """
 
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import sys
 import numpy as np
 
@@ -12,7 +12,7 @@ if __name__ == '__main__':
   if len(sys.argv) != 2:
     raise Exception("Usage: python inspect_checkpoint.py <file_name>\nNote: Do not include the .data .index or .meta part of the model checkpoint in file_name.")
   file_name = sys.argv[1]
-  reader = tf.train.NewCheckpointReader(file_name)
+  reader = tf.compat.v1.train.NewCheckpointReader(file_name)
   var_to_shape_map = reader.get_variable_to_shape_map()
 
   finite = []
