@@ -116,7 +116,7 @@ class Vocab(object):
 
 class TopicModel (object):
     """Reads a pretrained LDA model trained using the Gensim library"""
-    def __init__(self, modelAdd = 'lda/lda.model', dictAdd = 'lda/dictionary.dic', topicsFileAdd = ''):
+    def __init__(self, modelAdd = 'lda.model', dictAdd = 'dictionary.dic', topicsFileAdd = ''):
         self.topicModel, self.topicModelDictionary = self._loadPretrainedTM (modelAdd, dictAdd)
         self.topics_dictionary = self._createTopicsDict(1000)# A dictionary containing all topics
         
