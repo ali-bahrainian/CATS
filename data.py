@@ -23,6 +23,7 @@ import csv
 from tensorflow.core.example import example_pb2
 import gensim
 from gensim import corpora, similarities, models
+import re
 
 # <s> and </s> are used in the data files to segment the abstracts into sentences. They don't receive vocab ids.
 SENTENCE_START = '<s>'
@@ -339,16 +340,7 @@ def abstract2sents(abstract):
 
   Returns:
     sents: List of sentence strings (no tags)"""
-  cur = 0
-  sents = []
-  while True:
-    try:
-      start_p = abstract.index(SENTENCE_START, cur)
-      end_p = abstract.index(SENTENCE_END, start_p + 1)
-      cur = end_p + len(SENTENCE_END)
-      sents.append(abstract[start_p+len(SENTENCE_START):end_p])
-    except ValueError as e: # no more sentences
-      return sents
+  return [str.encode(sent) for sent in re.findall('<s> (.+?) <\/s>', abstract.decode('utf-8'))]
 
 
 def show_art_oovs(article, vocab):
