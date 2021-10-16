@@ -340,7 +340,7 @@ def abstract2sents(abstract):
 
   Returns:
     sents: List of sentence strings (no tags)"""
-  return [str.encode(sent) for sent in re.findall('<s> (.+?) <\/s>', abstract.decode('utf-8'))]
+  return re.findall('<s> (.+?) <\/s>', abstract.decode('utf-8'))
 
 
 def show_art_oovs(article, vocab):
