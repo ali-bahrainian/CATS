@@ -20,7 +20,7 @@ import os
 import time
 import numpy as np
 import tensorflow as tf
-import attention_decoder
+from attention_decoder import attention_decoder
 from tensorboard.plugins import projector
 
 FLAGS = tf.compat.v1.app.flags.FLAGS
