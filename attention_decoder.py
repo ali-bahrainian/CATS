@@ -49,7 +49,7 @@ def attention_decoder(decoder_inputs, initial_state, encoder_states, enc_topicwo
     coverage: Coverage vector on the last step computed. None if use_coverage=False.
   """
   with variable_scope.variable_scope("attention_decoder") as scope:
-    batch_size = encoder_states.get_shape()[0].value # if this line fails, it's because the batch size isn't defined
+    batch_size = encoder_states.get_shape()[0] # if this line fails, it's because the batch size isn't defined
     attn_size = encoder_states.get_shape()[2].value # if this line fails, it's because the attention length isn't defined
     
     #tf.Print(attn_dist, [attn_dist])
