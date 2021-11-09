@@ -20,7 +20,7 @@ The LDA models used in our paper can be obtained from [here](https://drive.googl
 In order to train the model you may run:
 
 ```
-pipenv run python3 run_summarization.py --mode=train --data_path='data/chunked/train_*' --vocab_path='data/vocab' --log_root='logs' --exp_name=myexperiment
+python3 run_summarization.py --mode=train --data_path='data/chunked/train_*' --vocab_path='data/vocab' --log_root='logs' --exp_name=myexperiment
 ```
 
 This will create a subdirectory of your specified log_root called myexperiment where all checkpoints will be saved. Then the model will start training using the train_*.bin files as training data.
@@ -30,7 +30,7 @@ This will create a subdirectory of your specified log_root called myexperiment w
 As stated in the paper, no topic information were used at test time. In order to decode without topic information, we used the pointer-generator basic model code [here](https://github.com/abisee/pointer-generator). After downloading the code, you may decode using:
 
 ```
-python run_summarization.py --mode=decode --data_path=/path/to/chunked/val_* --vocab_path=/path/to/vocab --log_root=/path/to/a/log/directory --exp_name=myexperiment
+python3 run_summarization.py --mode=decode --data_path='data/chunked/val_*' --vocab_path='data/vocab' --log_root='logs' --exp_name=myexperiment
 ```
 
 Please note that one should run the above command using the same settings entered for the training job (plus any decode mode specific flags like beam_size).
