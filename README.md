@@ -4,7 +4,7 @@
 This repository contains code related to the paper “CATS: Customizable Abstractive Topic-based Summarization” published at Transactions of Information Systems (TOIS) journal, 2021. 
 
 
-The code has been developed using python 2.7, and Tensorflow 1.4. This implementation is based on code releases related to Pointer-Generator Networks [here](https://github.com/abisee/pointer-generator) and the TextSum project. 
+The code has been developed using Python 3, and v1 compatible TensorFlow 2 code. This implementation is based on code releases related to Pointer-Generator Networks [here](https://github.com/abisee/pointer-generator) and the TextSum project. 
 
 
 #### Dataset
