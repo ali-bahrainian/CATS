@@ -2,3 +2,5 @@
 data
 *.bak
 __init__.py
+.ipynb_checkpoints
+__pycache__
