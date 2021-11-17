@@ -54,11 +54,15 @@ class BeamSearchDecoder(object):
     ckpt_path = util.load_ckpt(self._saver, self._sess)
 
     if FLAGS.single_pass:
-      # Make a descriptive decode directory name
-      ckpt_name = "ckpt-" + ckpt_path.split('-')[-1] # this is something of the form "ckpt-123456"
-      self._decode_dir = os.path.join(FLAGS.log_root, get_decode_dir_name(ckpt_name))
-      if os.path.exists(self._decode_dir):
-        raise Exception("single_pass decode directory %s should not already exist" % self._decode_dir)
+      if FLAGS.decode_dir != '':
+        # Overwrite automatic naming of directory
+        self._decode_dir = FLAGS.decode_dir
+      else:
+        # Make a descriptive decode directory name
+        ckpt_name = "ckpt-" + ckpt_path.split('-')[-1] # this is something of the form "ckpt-123456"
+        self._decode_dir = os.path.join(FLAGS.log_root, get_decode_dir_name(ckpt_name))
+        if os.path.exists(self._decode_dir):
+          raise Exception("single_pass decode directory %s should not already exist" % self._decode_dir)
 
     else: # Generic decode dir name
       self._decode_dir = os.path.join(FLAGS.log_root, "decode")
@@ -81,7 +85,7 @@ class BeamSearchDecoder(object):
     while True:
       if FLAGS.single_input and counter == 1:
         break
-      
+
       batch = self._batcher.next_batch()  # 1 example repeated across batch
       if batch is None: # finished decoding dataset in single_pass mode
         assert FLAGS.single_pass, "Dataset exhausted, but we are not in single_pass mode"

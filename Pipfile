@@ -7,6 +7,10 @@ name = "pypi"
 gensim = "*"
 tensorflow = "*"
 pyrouge = "*"
+flask = "*"
+uuid = "*"
+stanza = "*"
+pathlib = "*"
 
 [dev-packages]
 

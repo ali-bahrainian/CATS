@@ -45,6 +45,7 @@ tf.compat.v1.app.flags.DEFINE_boolean('single_input', False, 'For decode mode on
 # Where to save output
 tf.compat.v1.app.flags.DEFINE_string('log_root', '', 'Root directory for all logging.')
 tf.compat.v1.app.flags.DEFINE_string('exp_name', '', 'Name for experiment. Logs will be saved in a directory with this name, under log_root.')
+tf.compat.v1.app.flags.DEFINE_string('decode_dir', '', 'Name for the directory of a single input, single pass summarization. This overwrites default parameter-focused directory naming.')
 
 # Hyperparameters
 tf.compat.v1.app.flags.DEFINE_integer('hidden_dim', 256, 'dimension of RNN hidden states')
