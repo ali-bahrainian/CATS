@@ -5,7 +5,7 @@ import os
 import shutil
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 
 @app.route('/', methods=['GET'])
 def home():
