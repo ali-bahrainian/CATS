@@ -79,6 +79,9 @@ class BeamSearchDecoder(object):
     t0 = time.time()
     counter = 0
     while True:
+      if FLAGS.single_input and counter == 1:
+        break
+      
       batch = self._batcher.next_batch()  # 1 example repeated across batch
       if batch is None: # finished decoding dataset in single_pass mode
         assert FLAGS.single_pass, "Dataset exhausted, but we are not in single_pass mode"
