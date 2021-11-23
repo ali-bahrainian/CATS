@@ -38,3 +38,21 @@ Please note that one should run the above command using the same settings entere
 This will repeatedly load random examples from your specified datafile and generate a summary using beam search. The results will be printed to screen.
 
 If you would like to run evaluation on the entire validation or test set and obtain ROUGE scores, set the flag single_pass=1. This will go through the entire dataset in the same order, writing the generated summaries to file, and then running evaluation using pyrouge.   
+
+### CATS API
+To use the API, build the Docker container using the following command:
+
+```
+docker build -t cats-api-container . 
+```
+
+Then, run the Docker container with the following command:
+
+```
+docker run -d -p 5000:5000 cats-api-container 
+```
+
+This should expose the container on port 5000. To summarize one input text, you can send a POST-request to `/summarize`, structuring the request as follows:
+
+- The request must have form-data as body
+- The form-data object should include a key called `target`, with the value being the to-be-summarized text.
