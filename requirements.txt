@@ -1,0 +1,7 @@
+gensim
+tensorflow
+pyrouge
+flask
+uuid
+stanza
+pathlib

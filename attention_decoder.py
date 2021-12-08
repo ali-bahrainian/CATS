@@ -49,12 +49,12 @@ def attention_decoder(decoder_inputs, initial_state, encoder_states, enc_topicwo
     coverage: Coverage vector on the last step computed. None if use_coverage=False.
   """
   with variable_scope.variable_scope("attention_decoder") as scope:
-    batch_size = encoder_states.get_shape()[0].value # if this line fails, it's because the batch size isn't defined
-    attn_size = encoder_states.get_shape()[2].value # if this line fails, it's because the attention length isn't defined
+    batch_size = encoder_states.get_shape()[0] # if this line fails, it's because the batch size isn't defined
+    attn_size = encoder_states.get_shape()[2] # if this line fails, it's because the attention length isn't defined
     
     #tf.Print(attn_dist, [attn_dist])
-    print "-------------------------"
-    print "-------------------------"
+    print("-------------------------")
+    print("-------------------------")
   
     # Reshape encoder_states (need to insert a dim)
     encoder_states = tf.expand_dims(encoder_states, axis=2) # now is shape (batch_size, attn_len, 1, attn_size)
@@ -101,7 +101,7 @@ def attention_decoder(decoder_inputs, initial_state, encoder_states, enc_topicwo
           """Take softmax of e then apply enc_padding_mask and re-normalize"""
           attn_dist = nn_ops.softmax(e) # take softmax. shape (batch_size, attn_length)
           attn_dist *= enc_padding_mask # apply mask
-          masked_sums = tf.reduce_sum(attn_dist, axis=1) # shape (batch_size)
+          masked_sums = tf.reduce_sum(input_tensor=attn_dist, axis=1) # shape (batch_size)
           return attn_dist / tf.reshape(masked_sums, [-1, 1]) # re-normalize
 
         if use_coverage and coverage is not None: # non-first step of coverage
@@ -146,13 +146,13 @@ def attention_decoder(decoder_inputs, initial_state, encoder_states, enc_topicwo
       # Re-calculate the context vector from the previous step so that we can pass it through a linear layer with this step's input to get a modified version of the input
       context_vector, _, coverage = attention(initial_state, enc_topicwords_probs_batch, coverage) # in decode mode, this is what updates the coverage vector
     for i, inp in enumerate(decoder_inputs):
-      tf.logging.info("Adding attention_decoder timestep %i of %i", i, len(decoder_inputs))
+      tf.compat.v1.logging.info("Adding attention_decoder timestep %i of %i", i, len(decoder_inputs))
       if i > 0:
         variable_scope.get_variable_scope().reuse_variables()
 
       # Merge input and previous attentions into one vector x of the same size as inp
       input_size = inp.get_shape().with_rank(2)[1]
-      if input_size.value is None:
+      if input_size is None:
         raise ValueError("Could not infer input size from input: %s" % inp.name)
       x = linear([inp] + [context_vector], input_size, True)
 
@@ -169,7 +169,7 @@ def attention_decoder(decoder_inputs, initial_state, encoder_states, enc_topicwo
 
       # Calculate p_gen
       if pointer_gen:
-        with tf.variable_scope('calculate_pgen'):
+        with tf.compat.v1.variable_scope('calculate_pgen'):
           p_gen = linear([context_vector, state.c, state.h, x], 1, True) # Tensor shape (batch_size, 1)
           p_gen = tf.sigmoid(p_gen)
           p_gens.append(p_gen)
@@ -227,14 +227,14 @@ def linear(args, output_size, bias, bias_start=0.0, scope=None):
       total_arg_size += shape[1]
 
   # Now the computation.
-  with tf.variable_scope(scope or "Linear"):
-    matrix = tf.get_variable("Matrix", [total_arg_size, output_size])
+  with tf.compat.v1.variable_scope(scope or "Linear"):
+    matrix = tf.compat.v1.get_variable("Matrix", [total_arg_size, output_size])
     if len(args) == 1:
       res = tf.matmul(args[0], matrix)
     else:
       res = tf.matmul(tf.concat(axis=1, values=args), matrix)
     if not bias:
       return res
-    bias_term = tf.get_variable(
-        "Bias", [output_size], initializer=tf.constant_initializer(bias_start))
+    bias_term = tf.compat.v1.get_variable(
+        "Bias", [output_size], initializer=tf.compat.v1.constant_initializer(bias_start))
   return res + bias_term
